@@ -1,4 +1,5 @@
 ﻿using Survey_System.Models;
+using Survey_System.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,21 @@ using System.Web.Mvc;
 
 namespace Survey_System.Controllers
 {
-    public class QuestionController : Controller
+    public class QuestionController : BaseController
     {
         
         SurveyEntities db = new SurveyEntities();
         public ActionResult Index()
         {
-            var model = db.Question.ToList();
-            return View(model);
+            if (Session["Admin"]==null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+            else
+            {
+                var model = db.Question.ToList();
+                return View(model);
+            }
         }
 
         public ActionResult Create(Question question)
@@ -22,7 +30,7 @@ namespace Survey_System.Controllers
             if (question.QuestionLine != null)
             {
                 question.CreateDate = DateTime.Now;
-                question.CreateBy = "System";
+                question.CreateBy = NameSurname;
                 db.Question.Add(question);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -51,7 +59,7 @@ namespace Survey_System.Controllers
             db.Entry(question).State = System.Data.Entity.EntityState.Modified;
             db.Entry(question).Property(e => e.CreateBy).IsModified = false;
             db.Entry(question).Property(e => e.CreateDate).IsModified = false;
-            question.ModifyBy = "System Edit";
+            question.ModifyBy = NameSurname;
             question.ModifyDate = DateTime.Now;
             db.SaveChanges();
             return RedirectToAction("index");
