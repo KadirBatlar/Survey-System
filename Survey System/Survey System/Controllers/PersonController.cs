@@ -25,7 +25,6 @@ namespace Survey_System.Controllers
                 return View(model);
             }
         }
-
         public ActionResult Create(Person person, string Answer)
         {
             if (person.NameSurname != null)

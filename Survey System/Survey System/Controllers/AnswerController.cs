@@ -105,7 +105,7 @@ namespace Survey_System.Controllers
         }
         public ActionResult Detail(int? Id)
         {
-            var model = db.AnswerLine.Where(m => m.AnswerId==Id).ToList(;
+            var model = db.AnswerLine.Where(m => m.AnswerId==Id).ToList();
             return View(model);
         }
 
